@@ -1,6 +1,6 @@
 # Sar-MACD-cont
 
-## Three version : validate different rows in generate_signal function in line 16-23 
+## SAR/MACD/ALL : validate different rows in generate_signal function in line 16-23 
 
   Only Sar: validate the first three rows
 
