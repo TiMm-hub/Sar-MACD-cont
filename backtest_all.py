@@ -16,20 +16,15 @@ class SAR_agent:
         macd = abstract.MACD(time_bar, fastperiod=self.paradict['macd_fast'], slowperiod=self.paradict['macd_slow'], signalperiod=self.paradict['macd_period'])
         up = (sar > time_bar.close).astype(int)
         up_diff = -up.diff()
-        
-        #down = (sar < time_bar.close).astype(int)
-        #down_diff = -down.diff()
-        
+    
         macd_roll_buy = (macd.macdhist < 0).rolling(self.paradict['roll_length'], min_periods=1).sum()
         macd_roll_sell  = (macd.macdhist > 0).rolling(self.paradict['roll_length'], min_periods=1).sum()
         # this returns a signal array for every timestamp
         macd_diff_buy = ((macd.macdhist).diff() > 0).rolling(self.paradict['roll_length'], min_periods=1).sum()
         macd_diff_sell = ((macd.macdhist).diff() < 0).rolling(self.paradict['roll_length'], min_periods=1).sum()
         
-        #nega_macd = (macd.macd < -5).astype(int).rolling(self.paradict['roll_length'], min_periods=1).sum()
-
         sar_sell = up.diff().rolling(self.paradict['roll_length'], min_periods=1).sum()
-        buy = (up_diff == 1) & (macd_roll_buy == 2)  & (macd_diff_buy == 2) #& (nega_macd > 0)
+        buy = (up_diff == 1) & (macd_roll_buy == 2)  & (macd_diff_buy == 2) 
         sell = (sar_sell > 0) & (macd_roll_sell == 2)  & (macd_diff_sell == 2)
         return buy, sell
 
@@ -119,14 +114,6 @@ def sar_stra_v3(time_bar, paradict, agent=SAR_agent, print_fig=False):
         else:
             return row.index[-1]
         
-    def transform3(row,buy_loc):
-        p = ((row == 1) & (row.index >= buy_loc)).astype(int)
-        if sum(p) > 0:
-            return row[p == 1].index[0]
-        elif sum(row != 0) > 0:
-            return row[row != 0].index[-1]
-        else:
-            return row.index[-1]
 
     def generate_sell_signal(df_input, buy_signal,sell_signal,profit,loss):
         df = df_input.copy()
@@ -227,15 +214,6 @@ def sar_stra_v4(time_bar, paradict, agent=SAR_agent,last_pos=0,cost=0, print_fig
 
     def transform2(row):
         p = ((row > 0) & (row >= time_bar.close)).astype(int)
-        if sum(p) > 0:
-            return row[p == 1].index[0]
-        elif sum(row != 0) > 0:
-            return row[row != 0].index[-1]
-        else:
-            return row.index[-1]
-        
-    def transform3(row,buy_loc):
-        p = ((row == 1) & (row.index >= buy_loc)).astype(int)
         if sum(p) > 0:
             return row[p == 1].index[0]
         elif sum(row != 0) > 0:
