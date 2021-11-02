@@ -12,7 +12,7 @@ class SAR_agent:
     def generate_signal(self, time_bar):
         sar = abstract.SAR(time_bar, acceleration=self.paradict['sar_acce'], maximum=self.paradict['sar_max'])
         macd = abstract.MACD(time_bar, fastperiod=self.paradict['macd_fast'], slowperiod=self.paradict['macd_slow'], signalperiod=self.paradict['macd_period'])
-        
+        # Only Sar: valid the first three rows; Only MACD: valid the middle 4 rows; ALL :all
         up = (sar > time_bar.close).astype(int)
         up_diff = -up.diff()
         sar_sell = up.diff().rolling(self.paradict['roll_length'], min_periods=1).sum()
