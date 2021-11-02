@@ -361,6 +361,7 @@ def run_sar_backtest_v5(sar_agent, paradict, start_date: str, duration: int, df=
         init_index = time_bars.index[0]
         c = 0
         last_high = 0
+        high_arr = np.zeros(paradict['max_duration'])
         for j in range(duration):
             timebar= time_bars[(init_index+(j)*datetime.timedelta(days=1)<=time_bars.index) & (time_bars.index<init_index+(j+1)*datetime.timedelta(days=1))]
             if not timebar.empty and timebar.shape[0] > 100:
@@ -368,7 +369,9 @@ def run_sar_backtest_v5(sar_agent, paradict, start_date: str, duration: int, df=
                 tmp_r.append((today_val-last_val) if (today_val-last_val) else 0)
                 last_val = today_val
                 last_pos = today_pos
-                last_high = max(last_high,today_high)
+                high_arr = np.delete(high_arr, 0)
+                high_arr = np.append(high_arr,today_high)
+                last_high = high_arr.max()
                 value = pd.concat([value,val.dropna()])
                 pos_rec = pd.concat([pos_rec,pos.dropna()])
             else:

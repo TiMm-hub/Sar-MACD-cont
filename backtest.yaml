@@ -1,0 +1,14 @@
+parameters:
+  sar_acce: 0.02
+  sar_max: 0.2
+  macd_fast: 12
+  macd_slow: 26
+  macd_period: 9
+  roll_length: 2
+  vol_ratio: 1.35
+  profit_coef: 1.005
+  fee: 0.0007000000000000001
+  stoploss_ratio: 1.005
+  # whether you want 3 times stoploss constraints
+  constraint : False
+  max_duration: 10
